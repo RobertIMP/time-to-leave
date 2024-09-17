@@ -336,6 +336,48 @@ class FlexibleMonthCalendar extends BaseCalendar
             window.clearInterval(slideTimer);
         });
 
+
+        $(document).on('mousewheel', 'input[type="time"]', function(e)
+        {
+            const input = e.target;
+            const [hoursStr, minutesStr] = input.value.split(':');
+            let hours = parseInt(hoursStr, 10);
+            let minutes = parseInt(minutesStr, 10);
+
+            if (e.originalEvent.wheelDelta > 0)
+            {
+                // Scroll up
+                if (e.shiftKey)
+                {
+                    // Adjust hours
+                    hours = (hours + 1) % 24;
+                }
+                else
+                {
+                    // Adjust minutes
+                    minutes = (minutes + 5) % 60;
+                }
+            }
+            else
+            {
+                // Scroll down
+                // eslint-disable-next-line no-lonely-if
+                if (e.shiftKey)
+                {
+                    // Adjust hours
+                    hours = (hours - 1 + 24) % 24;
+                }
+                else
+                {
+                    // Adjust minutes
+                    minutes = (minutes - 5 + 60) % 60;
+                }
+            }
+
+            input.value = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            e.preventDefault();
+        });
+
         function toggleArrowColor(target)
         {
             const element = $(target);
